@@ -164,6 +164,7 @@
           "apiVersion": "2018-07-01-preview",
           "name": "[parameters('connections_servicebus_name')]",
           "location": "[resourceGroup().location]",
+          "kind": "V1",
           "properties": {
             "api": {
               "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'servicebus')]"

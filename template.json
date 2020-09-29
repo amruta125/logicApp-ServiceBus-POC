@@ -7,10 +7,172 @@
         },
         "connections_servicebus_externalid": {
             "type": "String"
-        }
+        },
+        "namespaces_sb_tsg_aip_OrderDelivery_name": {
+            "type": "String"
+        },
+         "connections_servicebus_name": {
+            "type": "String"
+        },
+         "storageAccountName": {
+          "type": "string",
+        },
+        "containerName": {
+          "type": "string",
+          "defaultValue": "logs",
+        },
     },
     "variables": {},
     "resources": [
+        
+                {
+            "type": "Microsoft.ServiceBus/namespaces",
+            "apiVersion": "2018-01-01-preview",
+            "name": "[parameters('namespaces_sb_tsg_aip_OrderDelivery_name')]",
+            "location": "East US 2",
+            "tags": {
+                "Tier": "Sandbox",
+                "CaseCode": "dp0",
+                "Department": "TSG",
+                "Owner": "TSGCloudOps"
+            },
+            "sku": {
+                "name": "Standard",
+                "tier": "Standard"
+            },
+            "properties": {
+                "zoneRedundant": false
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/AuthorizationRules",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_sb_tsg_aip_OrderDelivery_name'), '/RootManageSharedAccessKey')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_tsg_aip_OrderDelivery_name'))]"
+            ],
+            "properties": {
+                "rights": [
+                    "Listen",
+                    "Manage",
+                    "Send"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/networkRuleSets",
+            "apiVersion": "2018-01-01-preview",
+            "name": "[concat(parameters('namespaces_sb_tsg_aip_OrderDelivery_name'), '/default')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_tsg_aip_OrderDelivery_name'))]"
+            ],
+            "properties": {
+                "defaultAction": "Deny",
+                "virtualNetworkRules": [],
+                "ipRules": []
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/queues",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_sb_tsg_aip_OrderDelivery_name'), '/invoice')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_tsg_aip_OrderDelivery_name'))]"
+            ],
+            "properties": {
+                "lockDuration": "PT30S",
+                "maxSizeInMegabytes": 1024,
+                "requiresDuplicateDetection": false,
+                "requiresSession": false,
+                "defaultMessageTimeToLive": "P14D",
+                "deadLetteringOnMessageExpiration": false,
+                "enableBatchedOperations": true,
+                "duplicateDetectionHistoryTimeWindow": "PT10M",
+                "maxDeliveryCount": 10,
+                "status": "Active",
+                "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+                "enablePartitioning": false,
+                "enableExpress": false
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/topics",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_sb_tsg_aip_OrderDelivery_name'), '/orders')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_tsg_aip_OrderDelivery_name'))]"
+            ],
+            "properties": {
+                "defaultMessageTimeToLive": "P14D",
+                "maxSizeInMegabytes": 1024,
+                "requiresDuplicateDetection": false,
+                "duplicateDetectionHistoryTimeWindow": "PT10M",
+                "enableBatchedOperations": true,
+                "status": "Active",
+                "supportOrdering": true,
+                "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+                "enablePartitioning": false,
+                "enableExpress": false
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_sb_tsg_aip_OrderDelivery_name'), '/orders/bostonOrders')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_tsg_aip_OrderDelivery_name'), 'orders')]",
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_tsg_aip_OrderDelivery_name'))]"
+            ],
+            "properties": {
+                "lockDuration": "PT30S",
+                "requiresSession": false,
+                "defaultMessageTimeToLive": "P14D",
+                "deadLetteringOnMessageExpiration": false,
+                "deadLetteringOnFilterEvaluationExceptions": false,
+                "maxDeliveryCount": 1000,
+                "status": "Active",
+                "enableBatchedOperations": true,
+                "autoDeleteOnIdle": "P10675198DT2H48M5S"
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_sb_tsg_aip_OrderDelivery_name'), '/orders/bostonOrders/LocationCode')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', parameters('namespaces_sb_tsg_aip_OrderDelivery_name'), 'orders', 'bostonOrders')]",
+                "[resourceId('Microsoft.ServiceBus/namespaces/topics', parameters('namespaces_sb_tsg_aip_OrderDelivery_name'), 'orders')]",
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_tsg_aip_OrderDelivery_name'))]"
+            ],
+            "properties": {
+                "action": {},
+                "filterType": "SqlFilter",
+                "sqlFilter": {
+                    "sqlExpression": "LocationCode='Boston'",
+                    "compatibilityLevel": 20
+                }
+            }
+        }, 
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('connections_servicebus_name')]",
+            "location": "eastus2",
+            "kind": "V1",
+            "properties": {
+                "displayName": "sb-tsg-aip-OrderDelivery-Connection",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[concat('/subscriptions/95977e9e-cd99-4dff-b085-498c9c0a4fb2/providers/Microsoft.Web/locations/eastus2/managedApis/', parameters('connections_servicebus_name'))]"
+                }
+            }
+        },
         {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",

@@ -257,8 +257,8 @@
                 "parameters": {
                     "$connections": {
                         "value": {
-                            "servicebus": {
-                                "connectionId": "[parameters('connections_servicebus_externalid')]",
+                            "servicebus": 
+                                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('connections_servicebus_externalid'))]",
                                 "connectionName": "servicebus",
                                 "id": "/subscriptions/95977e9e-cd99-4dff-b085-498c9c0a4fb2/providers/Microsoft.Web/locations/eastus2/managedApis/servicebus"
                             }

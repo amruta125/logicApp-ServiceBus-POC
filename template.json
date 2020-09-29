@@ -3,24 +3,23 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "workflows_la_tsg_aip_orderdelivery_name": {
-            "type": "String"
+            "type": "string"
         },
         "connections_servicebus_externalid": {
-            "type": "String"
+            "type": "string"
         },
         "namespaces_sb_tsg_aip_OrderDelivery_name": {
-            "type": "String"
+            "type": "string"
         },
          "connections_servicebus_name": {
-            "type": "String"
+            "type": "string"
         },
          "storageAccountName": {
-          "type": "string",
+          "type": "string"
         },
         "containerName": {
-          "type": "string",
-          "defaultValue": "logs",
-        },
+          "type": "string"
+        }
     },
     "variables": {},
     "resources": [
@@ -31,10 +30,12 @@
             "name": "[parameters('namespaces_sb_tsg_aip_OrderDelivery_name')]",
             "location": "East US 2",
             "tags": {
-                "Tier": "Sandbox",
-                "CaseCode": "dp0",
-                "Department": "TSG",
-                "Owner": "TSGCloudOps"
+                  "CaseCode": "s4du",
+                  "Tier": "DEV",
+                  "Department": "TSG",
+                  "Owner": "TSGSoftware",
+                  "Application":"LogicApp",
+                  "ManagedWith":"ARM Template"
             },
             "sku": {
                 "name": "Standard",

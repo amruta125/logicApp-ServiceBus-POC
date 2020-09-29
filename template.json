@@ -24,6 +24,25 @@
     "variables": {},
     "resources": [
         {
+          "type": "MICROSOFT.WEB/CONNECTIONS",
+          "apiVersion": "2018-07-01-preview",
+          "name": "[parameters('connections_servicebus_name')]",
+          "location": "[resourceGroup().location]",
+          "kind": "V1",
+          "properties": {
+            "api": {
+              "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'servicebus')]"
+            },
+            "displayName": "[parameters('connections_servicebus_name')]",
+            "parameterValues": {
+              "connectionString": "[listKeys(resourceId(concat('Microsoft.ServiceBus/namespaces/AuthorizationRules'),parameters('namespaces_sb_tsg_aip_OrderDelivery_name'),'RootManageSharedAccessKey'),'2015-08-01').primaryConnectionString]"
+            }
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_tsg_aip_OrderDelivery_name'))]"
+          ]
+        },
+        {
             "type": "Microsoft.ServiceBus/namespaces",
             "apiVersion": "2018-01-01-preview",
             "name": "[parameters('namespaces_sb_tsg_aip_OrderDelivery_name')]",
@@ -159,25 +178,6 @@
                 }
             }
         }, 
-        {
-          "type": "MICROSOFT.WEB/CONNECTIONS",
-          "apiVersion": "2018-07-01-preview",
-          "name": "[parameters('connections_servicebus_name')]",
-          "location": "[resourceGroup().location]",
-          "kind": "V1",
-          "properties": {
-            "api": {
-              "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'servicebus')]"
-            },
-            "displayName": "[parameters('connections_servicebus_name')]",
-            "parameterValues": {
-              "connectionString": "[listKeys(resourceId(concat('Microsoft.ServiceBus/namespaces/AuthorizationRules'),parameters('namespaces_sb_tsg_aip_OrderDelivery_name'),'RootManageSharedAccessKey'),'2015-08-01').primaryConnectionString]"
-            }
-          },
-          "dependsOn": [
-            "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_tsg_aip_OrderDelivery_name'))]"
-          ]
-        },
         {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",

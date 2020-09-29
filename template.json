@@ -3,11 +3,9 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "workflows_la_tsg_aip_orderdelivery_name": {
-            "defaultValue": "la-tsg-aip-orderdelivery",
             "type": "String"
         },
         "connections_servicebus_externalid": {
-            "defaultValue": "/subscriptions/95977e9e-cd99-4dff-b085-498c9c0a4fb2/resourceGroups/rg-tsg-aip-grp1/providers/Microsoft.Web/connections/servicebus",
             "type": "String"
         }
     },
@@ -19,10 +17,12 @@
             "name": "[parameters('workflows_la_tsg_aip_orderdelivery_name')]",
             "location": "eastus2",
             "tags": {
-                "CaseCode": "dp0",
-                "Department": "TSG",
-                "Owner": "TSGCloudOps",
-                "Tier": "Sandbox"
+                  "CaseCode": "s4du",
+                  "Tier": "DEV",
+                  "Department": "TSG",
+                  "Owner": "TSGSoftware",
+                  "Application":"LogicApp",
+                  "ManagedWith":"ARM Template"
             },
             "identity": {
                 "principalId": "a0cc69f0-61d6-4d62-8901-86bcba28a5a8",
@@ -96,6 +96,131 @@
                     },
                     "outputs": {}
                 },
+48
+                                "schema": {
+49
+                                    "properties": {
+50
+                                        "CustomerID": {
+51
+                                            "type": "string"
+52
+                                        },
+53
+                                        "ItemQuantity": {
+54
+                                            "type": "string"
+55
+                                        },
+56
+                                        "LocationCode": {
+57
+                                            "type": "string"
+58
+                                        },
+59
+                                        "OrderDate": {
+60
+                                            "type": "string"
+61
+                                        },
+62
+                                        "OrderID": {
+63
+                                            "type": "string"
+64
+                                        },
+65
+                                        "ProductID": {
+66
+                                            "type": "string"
+67
+                                        }
+68
+                                    },
+69
+                                    "type": "object"
+70
+                                }
+71
+                            }
+72
+                        }
+73
+                    },
+74
+                    "actions": {
+75
+                        "Send_message": {
+76
+                            "runAfter": {},
+77
+                            "type": "ApiConnection",
+78
+                            "inputs": {
+79
+                                "body": {
+80
+                                    "ContentData": "@{base64(triggerBody())}",
+81
+                                    "ContentType": "application/json",
+82
+                                    "Properties": "@triggerBody()"
+83
+                                },
+84
+                                "host": {
+85
+                                    "connection": {
+86
+                                        "name": "@parameters('$connections')['servicebus']['connectionId']"
+87
+                                    }
+88
+                                },
+89
+                                "method": "post",
+90
+                                "path": "/@{encodeURIComponent(encodeURIComponent('orders'))}/messages",
+91
+                                "retryPolicy": {
+92
+                                    "type": "none"
+93
+                                }
+94
+                            }
+95
+                        }
+96
+                    },
+97
+                    "outputs": {}
+98
+                },
+99
+                "parameters": {
+100
+                    "$connections": {
+101
+                        "value": {
+102
+                            "servicebus": {
+103
+                                "connectionId": "[parameters('connections_servicebus_externalid')]",
+104
+                                "connectionName": "servicebus",
+105
+                                "id": "/subscriptions/95977e9e-cd99-4dff-b085-498c9c0a4fb2/providers/Microsoft.Web/locations/eastus2/managedApis/servicebus"
+106
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
                 "parameters": {
                     "$connections": {
                         "value": {

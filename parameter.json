@@ -6,7 +6,7 @@
             "value": "la-tsg-aip-orderdelivery"
         },
         "connections_servicebus_externalid": {
-            "value": "/subscriptions/95977e9e-cd99-4dff-b085-498c9c0a4fb2/resourceGroups/rg-tsg-aip-grp1/providers/Microsoft.Web/connections/servicebus"
+            "value": "/subscriptions/95977e9e-cd99-4dff-b085-498c9c0a4fb2/resourceGroups/rg-tsg-aip-grp-sample/providers/Microsoft.Web/connections/servicebus"
         }
     }
 }

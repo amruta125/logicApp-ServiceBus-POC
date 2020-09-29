@@ -12,13 +12,13 @@
              "value": "sb_tsg_aip_OrderDelivery_name"
         },
          "connections_servicebus_name": {
-             "value": "servicebus",
+             "value": "servicebus"
         },
          "storageAccountName": {
           "value":"satsgaip"
         },
         "containerName": {
-          "value": "blobContainer",
-        },
+          "value": "blobContainer"
+        }
     }
 }

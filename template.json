@@ -24,11 +24,6 @@
                   "Application":"LogicApp",
                   "ManagedWith":"ARM Template"
             },
-            "identity": {
-                "principalId": "a0cc69f0-61d6-4d62-8901-86bcba28a5a8",
-                "tenantId": "eb120e12-65f1-477a-be8c-fe4f65926724",
-                "type": "SystemAssigned"
-            },
             "properties": {
                 "state": "Enabled",
                 "definition": {

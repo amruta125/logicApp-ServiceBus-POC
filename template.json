@@ -160,21 +160,23 @@
             }
         }, 
         {
-            "type": "MICROSOFT.WEB/CONNECTIONS",
-            "apiVersion": "2018-07-01-preview",
-            "name": "[parameters('connections_servicebus_name')]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "displayName": "sb-tsg-aip-OrderDelivery-Connection",
-                "customParameterValues": {},
-                "api": {
-                    "id": "[concat('/subscriptions/95977e9e-cd99-4dff-b085-498c9c0a4fb2/providers/Microsoft.Web/locations/eastus2/managedApis/', parameters('connections_servicebus_name'))]"
-                },
-                 "parameterValues": {
-                 "connectionString": "[listKeys(resourceId(concat('Microsoft.ServiceBus/namespaces/AuthorizationRules'),parameters('connections_servicebus_name'),'RootManageSharedAccessKey'),'2015-08-01').primaryConnectionString]"
-                }
+          "type": "MICROSOFT.WEB/CONNECTIONS",
+          "apiVersion": "2018-07-01-preview",
+          "name": "[parameters('connections_servicebus_name')]",
+          "location": "[resourceGroup().location]",
+          "properties": {
+            "api": {
+              "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'servicebus')]"
+            },
+            "displayName": "[parameters('connections_servicebus_name')]",
+            "parameterValues": {
+              "connectionString": "[listKeys(resourceId(concat('Microsoft.ServiceBus/namespaces/AuthorizationRules'),parameters('namespaces_sb_tsg_aip_OrderDelivery_name'),'RootManageSharedAccessKey'),'2015-08-01').primaryConnectionString]"
             }
-        },       
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_sb_tsg_aip_OrderDelivery_name'))]"
+          ]
+        },
         {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",

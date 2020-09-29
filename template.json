@@ -23,7 +23,6 @@
     },
     "variables": {},
     "resources": [
-                   
         {
             "type": "Microsoft.ServiceBus/namespaces",
             "apiVersion": "2018-01-01-preview",

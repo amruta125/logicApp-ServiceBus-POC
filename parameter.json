@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "workflows_la_tsg_aip_orderdelivery_name": {
-            "value": null
+            "value": "la-tsg-aip-orderdelivery"
         },
         "connections_servicebus_externalid": {
-            "value": null
+            "value": "/subscriptions/95977e9e-cd99-4dff-b085-498c9c0a4fb2/resourceGroups/rg-tsg-aip-grp1/providers/Microsoft.Web/connections/servicebus"
         }
     }
 }

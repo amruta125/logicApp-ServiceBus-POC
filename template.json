@@ -1,0 +1,113 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workflows_la_tsg_aip_orderdelivery_name": {
+            "defaultValue": "la-tsg-aip-orderdelivery",
+            "type": "String"
+        },
+        "connections_servicebus_externalid": {
+            "defaultValue": "/subscriptions/95977e9e-cd99-4dff-b085-498c9c0a4fb2/resourceGroups/rg-tsg-aip-grp1/providers/Microsoft.Web/connections/servicebus",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('workflows_la_tsg_aip_orderdelivery_name')]",
+            "location": "eastus2",
+            "tags": {
+                "CaseCode": "dp0",
+                "Department": "TSG",
+                "Owner": "TSGCloudOps",
+                "Tier": "Sandbox"
+            },
+            "identity": {
+                "principalId": "a0cc69f0-61d6-4d62-8901-86bcba28a5a8",
+                "tenantId": "eb120e12-65f1-477a-be8c-fe4f65926724",
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "manual": {
+                            "type": "Request",
+                            "kind": "Http",
+                            "inputs": {
+                                "schema": {
+                                    "properties": {
+                                        "CustomerID": {
+                                            "type": "string"
+                                        },
+                                        "ItemQuantity": {
+                                            "type": "string"
+                                        },
+                                        "LocationCode": {
+                                            "type": "string"
+                                        },
+                                        "OrderDate": {
+                                            "type": "string"
+                                        },
+                                        "OrderID": {
+                                            "type": "string"
+                                        },
+                                        "ProductID": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Send_message": {
+                            "runAfter": {},
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "ContentData": "@{base64(triggerBody())}",
+                                    "ContentType": "application/json",
+                                    "Properties": "@triggerBody()"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['servicebus']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/@{encodeURIComponent(encodeURIComponent('orders'))}/messages",
+                                "retryPolicy": {
+                                    "type": "none"
+                                }
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "servicebus": {
+                                "connectionId": "[parameters('connections_servicebus_externalid')]",
+                                "connectionName": "servicebus",
+                                "id": "/subscriptions/95977e9e-cd99-4dff-b085-498c9c0a4fb2/providers/Microsoft.Web/locations/eastus2/managedApis/servicebus"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

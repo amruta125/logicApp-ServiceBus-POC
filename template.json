@@ -175,10 +175,7 @@
                  "parameterValues": {
                  "connectionString": "[listKeys(resourceId(concat('Microsoft.ServiceBus/namespaces/AuthorizationRules'),parameters('connections_servicebus_name'),'RootManageSharedAccessKey'),'2015-08-01').primaryConnectionString]"
                 }
-            },
-             "dependsOn": [
-             "[resourceId('Microsoft.ServiceBus/namespaces', parameters('connections_servicebus_name'))]"
-           ]
+            }
         },
         {
             "type": "Microsoft.Logic/workflows",
